@@ -4,6 +4,7 @@ const express = require("express");
 const app = express();
 
 // Parse JSON using express.....
+// Applying Middleware......
 
 app.use(express.json());
 app.use(express.urlencoded({extended : false}));
@@ -57,6 +58,26 @@ app.get("/movie/:id",(req,res) => {
     res.status(400).send("movies not found....!");
 });
 
+// Update movie by its id........
+
+app.put("/movie/:id", (req, res) => {
+    const { id } = req.params;
+    const { title, directors, relDate } = req.body;
+
+    // Find the movie by ID
+    const movie = movies.find(movie => movie.id === id);
+    
+    if (!movie) {
+        return res.status(404).send("Movie not found....!");
+    }
+
+    // Update movie details
+    if (title) movie.title = title;
+    if (directors) movie.directors = directors;
+    if (relDate) movie.relDate = relDate;
+
+    res.json({ message: "Movie updated successfully!", movie });
+});
 // Delete movie from list......
 
 app.delete("/movie/:id", (req,res) =>{
